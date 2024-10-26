@@ -1,26 +1,22 @@
-import mongoose from "mongoose";
-import { DB_NAME } from "./constants.js";
-import dotenv from "dotenv";
-dotenv.config();
-import express from "express";
-const app = express();
+import dotenv from "dotenv"
+import connectDB from "./db/index.js";
+import {app} from './app.js'
+dotenv.config({
+    path: './.env'
+})
 
 
-const dbLink =  `mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@videostreamingapp.kjcrh.mongodb.net/?retryWrites=true&w=majority&appName=${DB_NAME}`;
-console.log(dbLink);
 
-const connectionInstance = mongoose.connect(dbLink)
-  .then(function (connection) {
-    console.log("Connected to MongoDB!");
-     console.log(`Connected to connectionInstance: ${connectionInstance}`);
-    app.listen(process.env.PORT, () => {
-      console.log(`Server is running on port ${process.env.PORT}`);
-    });
-  })
-  .catch((err) => {
-    console.log("ERROR:", err);
-    process.exit(1);
-  });
+connectDB()
+.then(() => {
+    app.listen(process.env.PORT || 8000, () => {
+        console.log(`⚙️ Server is running at port : ${process.env.PORT}`);
+    })
+})
+.catch((err) => {
+    console.log("MONGO db connection failed !!! ", err);
+})
+
 
 
 
